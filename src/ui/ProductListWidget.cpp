@@ -130,7 +130,7 @@ QWidget* ProductListWidget::createProductWidget(const Product& product, int inde
     frame->installEventFilter(this);
     
     // 设置框架的最小高度以确保可点击区域足够大
-    frame->setMinimumHeight(100);
+    frame->setMinimumHeight(150);
     
     return frame;
 }

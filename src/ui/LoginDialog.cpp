@@ -5,18 +5,31 @@
 #include <QRadioButton>
 #include <QDialogButtonBox>
 #include <QCoreApplication>
+#include <QLineEdit>
+#include <QFormLayout>
+#include <QMessageBox>
 
 LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent),
     radioButtonNormalUser(new QRadioButton("普通用户")),
-    radioButtonAdmin(new QRadioButton("管理员"))
+    radioButtonAdmin(new QRadioButton("管理员")),
+    userIdEdit(new QLineEdit)
 {
     // 设置默认选中项
     radioButtonNormalUser->setChecked(true);
     
+    // 设置ID输入框的占位符文本
+    userIdEdit->setPlaceholderText("请输入用户ID");
+    
     // 创建按钮框
     QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::accepted, [this]() {
+        if (userIdEdit->text().isEmpty()) {
+            QMessageBox::warning(this, "输入错误", "请输入用户ID");
+            return;
+        }
+        accept();
+    });
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     
     // 创建布局
@@ -24,6 +37,12 @@ LoginDialog::LoginDialog(QWidget *parent) :
     layout->addWidget(new QLabel("请选择登录身份："));
     layout->addWidget(radioButtonNormalUser);
     layout->addWidget(radioButtonAdmin);
+    
+    // 添加ID输入框
+    QFormLayout* formLayout = new QFormLayout;
+    formLayout->addRow("用户ID:", userIdEdit);
+    layout->addLayout(formLayout);
+    
     layout->addSpacerItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
     layout->addWidget(buttonBox);
     
@@ -50,11 +69,10 @@ QString LoginDialog::getUserType() const
 
 int LoginDialog::getUserId() const
 {
-    // 简化处理，根据用户类型返回不同的ID
-    if (radioButtonAdmin->isChecked()) {
-        return 1; // 管理员ID
-    } else {
-        return 2; // 普通用户ID
+    bool ok;
+    int userId = userIdEdit->text().toInt(&ok);
+    if (ok) {
+        return userId;
     }
-    return 1; // 默认返回管理员ID
+    return -1; // 返回无效ID
 }

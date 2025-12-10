@@ -102,6 +102,12 @@ public:
      */
     static QJsonObject productToJson(const Product& product);
 
+    /**
+     * @brief 生成下一个可用的商品ID
+     * @return 下一个商品ID
+     */
+    int generateNextId();
+
 private:
     QHash<int, Product> products; ///< 商品存储哈希表，键为商品ID
     int nextId;                   ///< 下一个可用的商品ID

@@ -13,29 +13,14 @@
 ProductRepository::ProductRepository() : nextId(1) {
     // 尝试从文件加载数据
     loadFromFile();
-    
-    // 如果没有数据，则添加一些示例商品数据
-    if (products.isEmpty()) {
-        QList<QString> tags1, tags2, tags3;
-        tags1 << "手机" << "苹果" << "新品";
-        tags2 << "电脑" << "华为" << "轻薄";
-        tags3 << "电视" << "小米" << "4K";
-        
-        Product product1(1, "苹果手机", 1, "最新的苹果手机，品质保证", 8999.0, 1, "北京", tags1, QDateTime::currentDateTime(), "在售");
-        products.insert(1, product1);
-        nextId = 2;
-        
-        Product product2(2, "华为笔记本", 1, "高性能轻薄本", 5999.0, 2, "上海", tags2, QDateTime::currentDateTime(), "在售");
-        products.insert(2, product2);
-        nextId = 3;
-        
-        Product product3(3, "小米电视", 2, "4K超高清智能电视", 2999.0, 3, "深圳", tags3, QDateTime::currentDateTime(), "促销");
-        products.insert(3, product3);
-        nextId = 4;
-        
-        // 保存初始数据到文件
-        saveToFile();
-    }
+}
+
+/**
+ * @brief 生成下一个可用的商品ID
+ * @return 下一个商品ID
+ */
+int ProductRepository::generateNextId() {
+    return nextId++;
 }
 
 /**

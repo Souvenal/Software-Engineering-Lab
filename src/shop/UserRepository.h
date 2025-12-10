@@ -84,7 +84,6 @@ public:
      */
     static QJsonObject userToJson(User* user);
 
-private:
     /**
      * @brief 从JSON文件加载数据
      * @return 加载成功返回true，否则返回false
@@ -97,6 +96,7 @@ private:
      */
     bool saveToJsonFile();
 
+private:
     QHash<int, User*> users; ///< 用户存储哈希表，键为用户ID
 };
 

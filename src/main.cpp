@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QMessageBox>
+#include <memory>
 #include "ui/LoginDialog.h"
 #include "ui/MainWindow.h"
 #include "shop/NormalUser.h"
@@ -19,7 +20,7 @@ int main(int argc, char *argv[]) {
         int userId = loginDialog.getUserId();
         
         // 创建并显示主窗口
-        MainWindow *mainWindow = new MainWindow(userType, userId);
+        auto mainWindow = std::make_unique<MainWindow>(userType, userId);
         mainWindow->show();
         
         return app.exec();

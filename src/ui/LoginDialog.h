@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QString>
 #include <QRadioButton>
+#include <QLineEdit>
 
 class LoginDialog : public QDialog
 {
@@ -19,6 +20,7 @@ public:
 private:
     QRadioButton *radioButtonNormalUser;
     QRadioButton *radioButtonAdmin;
+    QLineEdit *userIdEdit;
 };
 
 #endif // LOGINDIALOG_H

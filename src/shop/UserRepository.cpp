@@ -15,18 +15,6 @@
 UserRepository::UserRepository() {
     // 尝试从文件加载数据
     loadFromJsonFile();
-    
-    // 如果没有数据，则初始化一些测试用户数据
-    if (users.isEmpty()) {
-        User* admin = new Administrator(1, 1, "admin", "admin123");
-        users.insert(1, admin);
-        
-        User* normalUser = new NormalUser(2, 2, "user1", "user123");
-        users.insert(2, normalUser);
-        
-        // 保存初始数据到文件
-        saveToJsonFile();
-    }
 }
 
 /**
