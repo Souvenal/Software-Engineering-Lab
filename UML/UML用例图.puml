@@ -1,0 +1,67 @@
+@startuml "UML用例图 - 网络商城系统APP"
+
+left to right direction
+
+actor "普通用户" as user
+actor "注册用户" as registered_user
+actor "管理员" as admin
+
+rectangle "网络商城系统" {
+  ' 用户相关用例
+  registered_user --> (用户登录)
+  registered_user --> (浏览商品)
+  registered_user --> (搜索商品)
+  registered_user --> (查看商品详情)
+  registered_user --> (发布商品)
+  registered_user --> (编辑个人信息)
+  registered_user --> (发起交易)
+  registered_user --> (发送私信)
+  registered_user --> (发布评价)
+  
+  ' 管理员相关用例
+  admin --> (用户管理)
+  admin --> (商品管理)
+  admin --> (交易管理)
+  admin --> (数据统计)
+  admin --> (分类管理)
+  admin --> (系统管理)
+  admin --> (评价管理)
+  
+  ' 所有用户都可以的操作
+  user --> (用户注册)
+  user --> (浏览商品)
+  user --> (搜索商品)
+  user --> (查看商品详情)
+  
+  ' 用例间的关系
+  (用户注册) .> (用户登录) : <<include>>
+  (发布商品) .> (编辑商品) : <<extend>>
+  (发起交易) .> (查看交易状态) : <<include>>
+  (发送私信) .> (查看消息记录) : <<include>>
+  (发布评价) .> (举报评价) : <<extend>>
+  
+  ' 管理员特殊权限
+  (用户管理) .> (封禁用户) : <<extend>>
+  (商品管理) .> (删除商品) : <<extend>>
+  (评价管理) .> (处理举报) : <<extend>>
+  (数据统计) .> (生成报表) : <<include>>
+  (系统管理) .> (数据备份) : <<include>>
+  (系统管理) .> (查看系统日志) : <<include>>
+}
+
+note top of registered_user
+  注册用户具有完整的
+  系统使用权限
+end note
+
+note top of admin
+  管理员负责系统的
+  维护和管理工作
+end note
+
+note right of (数据统计)
+  包含用户、商品、
+  交易等各类数据统计
+end note
+
+@enduml

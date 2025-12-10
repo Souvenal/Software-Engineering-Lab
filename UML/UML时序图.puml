@@ -1,0 +1,69 @@
+@startuml "UML时序图 - 网络商城系统APP"
+
+actor 用户 as user
+
+participant "用户接口模块" as client_app
+participant "用户管理模块" as user_module
+participant "商品管理模块" as product_module
+participant "交易管理模块" as transaction_module
+participant "消息通信模块" as messaging_module
+participant "本地数据库" as local_db
+
+== 用户登录 ==
+user -> client_app: 输入用户名和密码
+client_app -> user_module: 验证用户凭证
+user_module -> local_db: 查询用户信息
+local_db --> user_module: 返回用户数据
+user_module -> user_module: 验证权限
+user_module --> client_app: 返回验证结果
+client_app -> user: 显示主界面
+
+== 浏览商品 ==
+user -> client_app: 请求浏览商品
+client_app -> product_module: 请求商品列表
+product_module -> local_db: 查询商品数据
+local_db --> product_module: 返回商品列表
+product_module --> client_app: 返回商品信息
+client_app -> user: 展示商品列表
+
+== 查看商品详情 ==
+user -> client_app: 点击某个商品
+client_app -> product_module: 请求商品详情
+product_module -> local_db: 查询具体商品信息
+local_db --> product_module: 返回商品详情
+product_module --> client_app: 返回商品详情
+client_app -> user: 展示商品详情页面
+
+== 发起交易 ==
+user -> client_app: 点击购买按钮
+client_app -> transaction_module: 创建新交易
+transaction_module -> local_db: 存储交易记录
+local_db --> transaction_module: 返回存储结果
+transaction_module -> messaging_module: 发送交易通知
+messaging_module -> local_db: 存储消息记录
+local_db --> messaging_module: 确认存储
+messaging_module -> user_module: 获取卖家信息
+user_module -> local_db: 查询卖家信息
+local_db --> user_module: 返回卖家数据
+user_module --> messaging_module: 返回卖家信息
+messaging_module -> user: 推送交易通知
+
+== 获取联系方式 ==
+user -> client_app: 请求联系卖家
+client_app -> transaction_module: 请求联系方式
+transaction_module -> user_module: 获取双方信息
+user_module -> local_db: 查询用户信息
+local_db --> user_module: 返回用户数据
+user_module --> transaction_module: 返回联系方式
+transaction_module --> client_app: 返回联系方式
+client_app -> user: 显示联系方式
+
+== 完成交易 ==
+user -> client_app: 确认交易完成
+client_app -> transaction_module: 更新交易状态
+transaction_module -> local_db: 更新交易记录
+local_db --> transaction_module: 确认更新
+transaction_module --> client_app: 确认状态更新
+client_app -> user: 显示交易完成信息
+
+@enduml

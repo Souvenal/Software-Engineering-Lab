@@ -1,0 +1,97 @@
+@startuml "UML类图 - 网络商场系统APP"
+
+class User {
+    +userId: Integer
+    +roleId: Integer
+    +username: String
+    -password: String
+    +login(): Boolean
+    +logout(): void
+}
+
+class NormalUser {
+    +publishProduct(product: Product): Boolean
+    +editProduct(productId: Integer, product: Product): Boolean
+    +deleteProduct(productId: Integer): Boolean
+}
+
+class Administrator {
+    +banProduct(productId: Integer): Boolean
+    +unbanProduct(productId: Integer): Boolean
+    +deleteAnyProduct(productId: Integer): Boolean
+}
+
+class Product {
+    +productId: Integer
+    +title: String
+    +categoryId: Integer
+    +description: String
+    +price: Double
+    +sellerId: Integer
+    +location: String
+    +tags: List<String>
+    +publicTime: DateTime
+    +status: String
+}
+
+class ProductManager {
+    - productRepository: ProductRepository
+    - userRepository: UserRepository
+    
+    +publishProduct(product: Product, userId: Integer): Boolean
+    +editProduct(productId: Integer, product: Product, userId: Integer): Boolean
+    +deleteProduct(productId: Integer, userId: Integer): Boolean
+    +getProduct(productId: Integer): Product
+    +searchProducts(criteria: SearchCriteria): List<Product>
+    - validateOwnership(productId: Integer, userId: Integer): Boolean
+    - checkPublishPermission(userId: Integer): Boolean
+}
+
+class Transaction {
+    +transactionId: Integer
+    +buyerId: Integer
+    +productId: Integer
+    +status: String
+    +createTime: DateTime
+}
+
+class ProductRepository {
+    +save(product: Product): Boolean
+    +findById(productId: Integer): Product
+    +update(product: Product): Boolean
+    +delete(productId: Integer): Boolean
+    +findBySellerId(sellerId: Integer): List<Product>
+}
+
+class UserRepository {
+    +findById(userId: Integer): User
+    +checkUserRole(userId: Integer, role: String): Boolean
+}
+
+' 关系
+User <|-- NormalUser
+User <|-- Administrator
+
+NormalUser --> ProductManager : "使用\n>"
+Administrator --> ProductManager : "使用\n>"
+
+Product --> User : "seller\n>"
+Transaction --> User : "buyer\n>"
+Transaction --> Product : "product\n>"
+
+ProductManager --> ProductRepository : "操作\n>"
+ProductManager --> UserRepository : "验证\n>"
+
+note right of ProductManager
+  商品管理服务类
+  提供商品的CRUD操作
+  包含权限验证逻辑
+end note
+
+note right of NormalUser
+  普通用户可以调用
+  ProductManager 的方法
+  来管理自己的商品
+end note
+
+@enduml

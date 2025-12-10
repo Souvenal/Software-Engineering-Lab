@@ -1,0 +1,126 @@
+@startuml "UML组件图 - 网络商城系统APP"
+
+package "网络商城系统" {
+    component "客户端层" {
+        node "用户接口模块" as client_app {
+            artifact 登录界面
+            artifact 主界面
+            artifact 商品浏览界面
+            artifact 商品发布界面
+            artifact 个人中心界面
+        }
+    }
+
+    component "核心服务层" {
+        node "用户管理模块" as user_module {
+            artifact 用户注册
+            artifact 用户登录
+            artifact 权限验证
+            artifact 用户信息管理
+        }
+        
+        node "商品管理模块" as product_module {
+            artifact 商品发布
+            artifact 商品编辑
+            artifact 商品删除
+            artifact 商品搜索
+            artifact 商品详情展示
+        }
+        
+        node "交易管理模块" as transaction_module {
+            artifact 交易发起
+            artifact 交易状态管理
+            artifact 联系方式获取
+            artifact 交易完成确认
+        }
+        
+        node "消息通信模块" as messaging_module {
+            artifact 内置私信
+            artifact 消息记录
+            artifact 消息通知
+        }
+        
+        node "评价管理模块" as review_module {
+            artifact 评价发布
+            artifact 评价展示
+            artifact 评价举报处理
+        }
+        
+        node "数据统计模块" as analytics_module {
+            artifact 用户统计数据
+            artifact 商品统计数据
+            artifact 交易统计数据
+            artifact 报表生成
+        }
+        
+        node "分类管理模块" as category_module {
+            artifact 分类增删改
+            artifact 分类查询
+        }
+        
+        node "系统管理模块" as system_module {
+            artifact 数据备份
+            artifact 数据恢复
+            artifact 系统日志
+        }
+    }
+
+    component "数据存储层" {
+        node "本地数据库" as local_db {
+            artifact 用户数据表
+            artifact 商品数据表
+            artifact 交易数据表
+            artifact 消息数据表
+            artifact 评价数据表
+            artifact 分类数据表
+            artifact 系统日志表
+            artifact 操作记录表
+        }
+    }
+}
+
+' 连接关系
+client_app --> user_module : 使用
+client_app --> product_module : 使用
+client_app --> transaction_module : 使用
+client_app --> messaging_module : 使用
+client_app --> review_module : 使用
+client_app --> analytics_module : 使用
+
+user_module --> local_db : 访问
+product_module --> local_db : 访问
+transaction_module --> local_db : 访问
+messaging_module --> local_db : 访问
+review_module --> local_db : 访问
+analytics_module --> local_db : 访问
+category_module --> local_db : 访问
+system_module --> local_db : 访问
+
+note top of client_app
+  用户接口模块
+  提供图形用户界面
+  实现用户交互功能
+end note
+
+note right of product_module
+  商品管理模块
+  处理商品的CRUD操作
+  支持商品发布、编辑、
+  删除和搜索功能
+end note
+
+note right of transaction_module
+  交易管理模块
+  处理交易流程、
+  消息通信、联系方式
+  获取等业务逻辑
+end note
+
+note bottom of local_db
+  本地数据库
+  存储所有用户、商品、
+  交易、消息等数据
+  采用SQLite等本地存储方案
+end note
+
+@enduml
