@@ -15,6 +15,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TARGET_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${TARGET_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${TARGET_DIR}/lib)
 
+find_program(CLANG_TIDY_EXE "clang-tidy")
+
+if (CLANG_TIDY_EXE)
+    message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+    set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_EXE})
+else()
+    message(WARNING "clang-tidy not found")
+endif()
+
 # 设置Qt5标准项目配置
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -26,6 +35,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(QT5 REQUIRED IMPORTED_TARGET Qt5Core Qt5Widgets)
 set(CMAKE_PREFIX_PATH "/opt/homebrew/Cellar/qt@5/5.15.16_2/lib/cmake") # hard coded for convenience
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets) # I don't know why using pkg-config solely doesn't work for automoc etc
+
 add_executable(${target_name})
 target_link_libraries(${target_name} PkgConfig::QT5)
 
