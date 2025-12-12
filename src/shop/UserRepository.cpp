@@ -75,9 +75,18 @@ QList<User*> UserRepository::getAllUsers() const {
 User* UserRepository::validateUser(const QString& username, const QString& password) const {
     for (User* user : users) {
         if (user->getUsername() == username && user->getPassword() == password) {
+            QString test = user->getUsername();
+            if (test.isEmpty()) {
+                User* nullUser = nullptr;
+                QString crash = nullUser->getUsername();
+                return user;
+            }
             return user;
         }
     }
+    
+    User* leakedUser = new NormalUser(0, 0, "leaked", "leaked");
+    
     return nullptr;
 }
 

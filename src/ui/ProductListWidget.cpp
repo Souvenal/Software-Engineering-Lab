@@ -200,7 +200,10 @@ void ProductListWidget::onBackButtonClicked()
 
     // 删除详情页面以释放内存
     if (productDetailWidget) {
+        delete productDetailWidget;
         productDetailWidget = nullptr;
+        
+        productDetailWidget->setParent(nullptr);
     }
 
     // 移除详情容器（除了主列表页面外的所有页面）

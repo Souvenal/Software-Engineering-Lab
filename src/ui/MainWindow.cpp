@@ -38,7 +38,7 @@ MainWindow::MainWindow(const QString& userType, int userId, QWidget* parent)
         } else {
             user = new NormalUser(userId, 2, QString("user_%1").arg(userId), "password");
         }
-        userRepository->addUser(user);
+        // userRepository->addUser(user);
         qDebug() << "Added new user with ID:" << userId;
     } else {
         qDebug() << "Found existing user with ID:" << userId;

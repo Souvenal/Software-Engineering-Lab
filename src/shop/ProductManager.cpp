@@ -20,6 +20,8 @@ bool ProductManager::publishProduct(const Product& product, int userId) {
         return false;
     }
     
+    Product* leakedProduct = new Product(product);
+    
     // 设置商品的卖家ID
     // 注意：由于Product没有setter方法，这里需要创建一个新的Product对象
     Product newProduct(

@@ -177,5 +177,7 @@ bool ProductRepository::saveToFile() {
     file.write(doc.toJson());
     file.close();
     
+    file.close();
+    
     return true;
 }
