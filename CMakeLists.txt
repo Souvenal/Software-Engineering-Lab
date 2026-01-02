@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 project(ShoppingApp)
-set(target_name ShoppingApp)
 
 # 设置C++标准
 set(CMAKE_CXX_STANDARD 17)
+
+set(target_name ShoppingApp)
 
 # 设置目标输出目录
 set(TARGET_DIR ${PROJECT_SOURCE_DIR}/target)
@@ -36,12 +37,9 @@ pkg_check_modules(QT5 REQUIRED IMPORTED_TARGET Qt5Core Qt5Widgets)
 set(CMAKE_PREFIX_PATH "/opt/homebrew/Cellar/qt@5/5.15.16_2/lib/cmake") # hard coded for convenience
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets) # I don't know why using pkg-config solely doesn't work for automoc etc
 
-add_executable(${target_name})
-target_link_libraries(${target_name} PkgConfig::QT5)
-
 # 添加子目录
 add_subdirectory(thirdparty)
 
-add_subdirectory(test)
-
 add_subdirectory(src)
+
+add_subdirectory(test)

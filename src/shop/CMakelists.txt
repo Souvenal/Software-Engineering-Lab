@@ -1,0 +1,25 @@
+# 定义库名称
+set(SHOP_LIBRARY_NAME shop)
+
+# 使用GLOB自动搜索shop目录下的源文件和头文件
+file(GLOB_RECURSE SHOP_SOURCES "*.cpp")
+file(GLOB_RECURSE SHOP_HEADERS "*.h")
+
+# 创建静态库
+add_library(${SHOP_LIBRARY_NAME} STATIC
+    ${SHOP_SOURCES}
+    ${SHOP_HEADERS}
+)
+
+# 设置库的包含目录
+target_include_directories(${SHOP_LIBRARY_NAME}
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# 链接Qt5库到shop库
+target_link_libraries(${SHOP_LIBRARY_NAME}
+    PRIVATE
+        Qt5::Core
+        Qt5::Widgets
+)

@@ -1,0 +1,140 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '5.15.2'
+        host: ${{ matrix.os == 'windows-latest' && 'windows' || matrix.os == 'macOS-latest' && 'mac' || 'linux' }}
+        target: 'desktop'
+        arch: ${{ matrix.os == 'windows-latest' && 'win64_msvc2019_64' || 'gcc_64' }}
+        modules: 'qtbase qttools qttranslations'
+        install-deps: 'true'
+
+    - name: Install CMake and Ninja
+      uses: lukka/get-cmake@v3.21.1
+
+    - name: Install dependencies on Ubuntu
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential libgl1-mesa-dev libxcb1-dev libxkbcommon-x11-dev libxcb-cursor0
+
+    - name: Install dependencies on macOS
+      if: matrix.os == 'macOS-latest'
+      run: |
+        brew install cmake
+
+    - name: Install dependencies on Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install ninja
+
+    - name: Configure CMake
+      run: |
+        cmake -B ${{github.workspace}}/build -G "Ninja" -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build project
+      run: |
+        cmake --build ${{github.workspace}}/build --config Release
+
+    - name: Run tests
+      run: |
+        cd ${{github.workspace}}/build && ctest --output-on-failure -C Release
+      env:
+        CTEST_OUTPUT_ON_FAILURE: 1
+
+    - name: Upload build artifacts (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-${{ matrix.os }}
+        path: target/
+        
+  clang-tidy:
+    name: Run clang-tidy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '5.15.2'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'gcc_64'
+        modules: 'qtbase qttools qttranslations'
+        install-deps: 'true'
+
+    - name: Install clang-tidy
+      run: |
+        sudo apt update
+        sudo apt install -y clang-tidy
+
+    - name: Configure CMake with clang-tidy
+      run: |
+        cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_CLANG_TIDY="clang-tidy"
+        
+    - name: Build project with clang-tidy
+      run: |
+        cmake --build ${{github.workspace}}/build --config Release
+      continue-on-error: true
+
+    - name: Run clang-tidy analysis
+      run: |
+        find src/ -name "*.cpp" -o -name "*.h" | xargs clang-tidy -p ${{github.workspace}}/build
+
+  memory-analysis:
+    name: Memory analysis with Valgrind
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '5.15.2'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'gcc_64'
+        modules: 'qtbase qttools qttranslations'
+        install-deps: 'true'
+
+    - name: Install Valgrind
+      run: |
+        sudo apt update
+        sudo apt install -y valgrind
+
+    - name: Configure CMake
+      run: |
+        cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug
+
+    - name: Build project
+      run: |
+        cmake --build ${{github.workspace}}/build --config Debug
+
+    - name: Run tests with Valgrind
+      run: |
+        cd ${{github.workspace}}/build && find . -name "*test*" -executable -type f -exec valgrind --leak-check=full --error-exitcode=1 {} \; || true

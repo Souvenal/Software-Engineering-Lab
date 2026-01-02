@@ -1,7 +1,7 @@
 #ifndef USERREPOSITORY_H
 #define USERREPOSITORY_H
 
-#include "shop/User.h"
+#include "User.h"
 #include <QHash>
 #include <QList>
 #include <QString>
