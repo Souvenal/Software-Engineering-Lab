@@ -34,7 +34,7 @@ set(CMAKE_AUTOUIC ON)
 # 查找Qt5核心和窗口部件模块
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(QT5 REQUIRED IMPORTED_TARGET Qt5Core Qt5Widgets)
-set(CMAKE_PREFIX_PATH "/opt/homebrew/Cellar/qt@5/5.15.16_2/lib/cmake") # hard coded for convenience
+set(CMAKE_PREFIX_PATH $ENV{Qt5_DIR})
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets) # I don't know why using pkg-config solely doesn't work for automoc etc
 
 # 添加子目录

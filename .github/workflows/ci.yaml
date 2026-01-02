@@ -33,7 +33,7 @@ jobs:
       if: matrix.os == 'macOS-latest'
       run: |
         brew install qt@5
-        echo "Qt5_DIR=$(brew --prefix qt@5)/lib/cmake/Qt5" >> $GITHUB_ENV
+        echo "Qt5_DIR=$(brew --prefix qt@5)/lib/cmake" >> $GITHUB_ENV
         echo "QT_PLUGIN_PATH=$(brew --prefix qt@5)/plugins" >> $GITHUB_ENV
         echo "QML2_IMPORT_PATH=$(brew --prefix qt@5)/qml" >> $GITHUB_ENV
 
