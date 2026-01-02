@@ -39,6 +39,9 @@ find_package(Qt5 REQUIRED COMPONENTS Core Widgets) # I don't know why using pkg-
 add_executable(${target_name})
 target_link_libraries(${target_name} PkgConfig::QT5)
 
-
 # 添加子目录
+add_subdirectory(thirdparty)
+
+add_subdirectory(test)
+
 add_subdirectory(src)
