@@ -27,7 +27,7 @@ jobs:
         host: ${{ matrix.os == 'windows-latest' && 'windows' || matrix.os == 'macOS-latest' && 'mac' || 'linux' }}
         target: 'desktop'
         arch: ${{ matrix.os == 'windows-latest' && 'win64_msvc2019_64' || 'gcc_64' }}
-        modules: 'qtbase qttools qttranslations'
+        modules: 'qtbase'
         install-deps: 'true'
 
     - name: Install CMake and Ninja
@@ -84,7 +84,7 @@ jobs:
         host: 'linux'
         target: 'desktop'
         arch: 'gcc_64'
-        modules: 'qtbase qttools qttranslations'
+        modules: 'qtbase'
         install-deps: 'true'
 
     - name: Install clang-tidy
@@ -119,7 +119,7 @@ jobs:
         host: 'linux'
         target: 'desktop'
         arch: 'gcc_64'
-        modules: 'qtbase qttools qttranslations'
+        modules: 'qtbase'
         install-deps: 'true'
 
     - name: Install Valgrind
