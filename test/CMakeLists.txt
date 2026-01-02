@@ -1,5 +1,5 @@
-# Find Google Test
-find_package(GTest REQUIRED)
+# Google Test is available in thirdparty/googletest
+# So we don't need to find it separately
 
 add_executable(test
     test.cpp
@@ -7,21 +7,13 @@ add_executable(test
     test_integration.cpp
 )
 
-# Link against Google Test libraries and shop library
-if(TARGET GTest::gtest AND TARGET GTest::gtest_main)
-    target_link_libraries(test
-        GTest::gtest
-        GTest::gtest_main
-        shop  # 链接到shop库
-        Qt5::Core
-        Qt5::Widgets
-    )
-else()
-    target_link_libraries(test
-        gtest
-        gtest_main
-        shop  # 链接到shop库
-        Qt5::Core
-        Qt5::Widgets
-    )
-endif()
+# Link against Google Test libraries from thirdparty and other required libraries
+target_link_libraries(test
+    gtest
+    gtest_main
+    gmock
+    gmock_main
+    shop  # 链接到shop库
+    Qt5::Core
+    Qt5::Widgets
+)
